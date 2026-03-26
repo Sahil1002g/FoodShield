@@ -1,0 +1,11 @@
+spacy
+fastapi
+uvicorn
+pytesseract
+opencv-python
+pandas
+pyarrow
+spacy
+pytesseract
+opencv-python
+pillow

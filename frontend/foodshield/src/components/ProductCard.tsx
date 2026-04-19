@@ -8,7 +8,7 @@ const ProductCard = ({ product }: any) => {
       <View className="flex-row">
         <Image
           source={{ uri: product.image }}
-          className="w-24 h-24 rounded-xl"
+          className="w-28 h-24 rounded-xl"
           resizeMode="contain"
         />
 
@@ -18,19 +18,19 @@ const ProductCard = ({ product }: any) => {
           </Text>
 
           <Text className="text-gray-500">
-            Brand: {product.brand || "N/A"}
+            Brand: {product.brand || product.brands || "N/A"}
           </Text>
 
           <Text className="text-gray-500">
             Weight: {product.quantity || "N/A"}
           </Text>
-          <View className="flex flex-row justify-between ">
+          {/* <View className="flex flex-row justify-between ">
           <Text className="text-gray-600 ">
             Health Score: {(product.health_score)*10 || "N/A"}/100
           </Text>
 
           <ScoreBadge grade={product.grade} />
-          </View>
+          </View> */}
         </View>
       </View>
     </View>

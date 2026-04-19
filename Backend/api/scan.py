@@ -34,7 +34,13 @@ def scan_product(
 
     response = fetch_product(barcode)
 
-    if not response or response.get("status") != 1:
+    # Check if response is an error from fetch_product
+    if not response or response.get("success") is False:
+        error_message = response.get("message", "Product not found") if response else "Product not found"
+        raise HTTPException(status_code=404, detail=error_message)
+    
+    # Check if product data exists
+    if response.get("status") != 1:
         raise HTTPException(status_code=404, detail="Product not found")
 
     product= response.get("product", {})
@@ -76,8 +82,8 @@ def scan_product(
     result = {
     "barcode": barcode,
     "product_name": product.get("product_name") or "Unknown Product",
-    "brand": product.get("brands") or "",
-    "quantity": product.get("quantity") or product.get("serving_size") or "N/A",
+    "brand": product.get("brands") or product.get("brands") or "Unknown Brand",
+    "quantity": product.get("quantity") or product.get("serving_size") or "15",
     "image": product.get("image_url"),
     
     "grade": product.get("nutrition_grades") or product['nutriscore'].get("score") or "C",
@@ -95,6 +101,7 @@ def scan_product(
     "alternative_products": alternatives,
     "user_allergen_warning": matched_allergens
 }
+    
 
 
     history = ScanHistory(

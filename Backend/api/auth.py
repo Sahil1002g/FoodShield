@@ -8,7 +8,7 @@ from core.security import hash_password, verify_password, create_access_token
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
-# 🟢 SIGNUP
+#  SIGNUP
 @router.post("/signup")
 def signup(data: SignupSchema, db: Session = Depends(get_db)):
 
@@ -41,7 +41,7 @@ def signup(data: SignupSchema, db: Session = Depends(get_db)):
 
 
 
-# 🔵 LOGIN
+#  LOGIN
 @router.post("/login")
 def login(data: LoginSchema, db: Session = Depends(get_db)):
 

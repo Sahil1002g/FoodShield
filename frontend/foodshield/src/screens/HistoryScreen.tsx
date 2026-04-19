@@ -53,14 +53,24 @@ export default function HistoryScreen({ navigation }: any) {
     fetchHistory();
   }, []);
 
-  const fetchHistory = async () => {
-    try {
-      const res = await API.get("/history");
-      setHistory(res.data);
-    } catch (error) {
-      console.log("History Error:", error);
-    }
-  };
+const fetchHistory = async () => {
+  try {
+    const res = await API.get("/history");
+
+    // Deduplicate: keep only the first/latest entry per barcode
+    const seen = new Set<string>();
+    const unique = res.data.filter((item: any) => {
+      const key = item.product?.barcode ?? item.id;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+
+    setHistory(unique);
+  } catch (error) {
+    console.log("History Error:", error);
+  }
+}
 
   console.log("User History:", history);
   return (

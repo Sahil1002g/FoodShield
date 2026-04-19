@@ -43,9 +43,9 @@ const MainTabs = () => {
             })}
         >
             <Tab.Screen name={MainRoute.Home} component={HomeScreen} />
-            <Tab.Screen name={MainRoute.History} component={HistoryScreen} />
             <Tab.Screen name={MainRoute.ScanProduct} component={Scan} />
-            <Tab.Screen name={MainRoute.Bot} component={BotScreen} />
+            <Tab.Screen name={MainRoute.History} component={HistoryScreen} />
+            {/* <Tab.Screen name={MainRoute.Bot} component={BotScreen} /> */}
             <Tab.Screen name={MainRoute.Account} component={AccountScreen} />
         </Tab.Navigator>
 

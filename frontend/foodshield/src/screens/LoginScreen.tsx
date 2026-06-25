@@ -226,9 +226,7 @@ const LoginScreen = ({ navigation }: any) => {
         email: loginId,
         password: trimmedPassword,
       });
-      const token = res.data.access_token;
-      await AsyncStorage.setItem("token", token);
-      await AsyncStorage.setItem("userToken", token);
+      await AsyncStorage.setItem("token", res.data.access_token);
       await AsyncStorage.setItem("user_id", String(res.data.user_id));
       navigation.replace(RootRoutes.MainTabs);
     } catch (error: any) {

@@ -118,7 +118,6 @@ const AccountScreen = ({ navigation }: any) => {
           style: "destructive",
           onPress: async () => {
             await AsyncStorage.removeItem("token");
-            await AsyncStorage.removeItem("userToken");
             await AsyncStorage.removeItem("user_id");
             navigation.replace(RootRoutes.AuthStack);
           },

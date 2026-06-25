@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+import { useFocusEffect } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import API from "../utils/api";
 import ScoreBadge from "../components/ScoreBadge";
@@ -49,30 +50,31 @@ const formatDate = (dateString: string) => {
 export default function HistoryScreen({ navigation }: any) {
   const [history, setHistory] = useState<any[]>([]);
 
-  useEffect(() => {
-    fetchHistory();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchHistory();
+      return undefined;
+    }, [])
+  );
 
-const fetchHistory = async () => {
-  try {
-    const res = await API.get("/history");
+  const fetchHistory = async () => {
+    try {
+      const res = await API.get("/history");
 
-    // Deduplicate: keep only the first/latest entry per barcode
-    const seen = new Set<string>();
-    const unique = res.data.filter((item: any) => {
-      const key = item.product?.barcode ?? item.id;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
+      // Deduplicate: keep only the first/latest entry per barcode
+      const seen = new Set<string>();
+      const unique = res.data.filter((item: any) => {
+        const key = item.product?.barcode ?? item.id;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
 
-    setHistory(unique);
-  } catch (error) {
-    console.log("History Error:", error);
-  }
-}
-
-  console.log("User History:", history);
+      setHistory(unique);
+    } catch (error) {
+      console.log("History Error:", error);
+    }
+  };
   return (
     <SafeAreaView className="flex-1 bg-[#f7f7f5]">
       

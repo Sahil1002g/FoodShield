@@ -37,3 +37,9 @@ db.sqlite3
 .idea/
 .DS_Store
 Thumbs.db
+
+
+.venv/
+__pycache__/
+.env
+*.pyc

@@ -56,28 +56,50 @@
 
 
 
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { View, Text } from "react-native";
 import {
   Camera,
   useCameraDevices,
   useCodeScanner,
 } from "react-native-vision-camera";
-import { useNavigation } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native";
 import { MainRoute } from "../navigation/Routes";
 
 export default function Scan() {
   const camera = useRef<Camera>(null);
   const navigation = useNavigation<any>();
+  const isFocused = useIsFocused();
+  const [cameraPermission, setCameraPermission] = useState(
+    Camera.getCameraPermissionStatus(),
+  );
 
   const devices = useCameraDevices();
   const device = devices.find((d) => d.position === "back");
 
-  useEffect(() => {
-    (async () => {
-      await Camera.requestCameraPermission();
-    })();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true;
+
+      const requestPermission = async () => {
+        const permission = await Camera.requestCameraPermission();
+
+        if (isActive) {
+          setCameraPermission(permission);
+        }
+      };
+
+      requestPermission();
+
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
 
   const codeScanner = useCodeScanner({
     codeTypes: ["ean-13"],
@@ -97,6 +119,16 @@ export default function Scan() {
     },
   });
 
+  if (cameraPermission !== "granted") {
+    return (
+      <View className="flex-1 items-center justify-center bg-white px-6">
+        <Text className="text-center text-black">
+          Camera permission is required to scan a product.
+        </Text>
+      </View>
+    );
+  }
+
   if (!device) {
     return (
       <View className="flex-1 items-center justify-center">
@@ -111,7 +143,7 @@ export default function Scan() {
         ref={camera}
         style={{ flex: 1 }}
         device={device}
-        isActive={true}
+        isActive={isFocused && cameraPermission === "granted"}
         codeScanner={codeScanner}
       />
     </View>

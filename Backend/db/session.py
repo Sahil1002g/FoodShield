@@ -1,28 +1,30 @@
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
+from pymongo import MongoClient
+from pymongo.errors import InvalidURI
 
 load_dotenv()
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("MONGODB_URI") or "mongodb://localhost:27017"
+MONGODB_DB_NAME = os.getenv("MONGODB_DB_NAME") or os.getenv("DB_NAME") or "foodshield"
 
-engine = create_engine(
-    DATABASE_URL,
-    pool_pre_ping=True,
-    pool_recycle=3600
-)
+try:
+    client = MongoClient(DATABASE_URL, serverSelectionTimeoutMS=5000)
+except InvalidURI:
+    client = MongoClient("mongodb://localhost:27017", serverSelectionTimeoutMS=5000)
 
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
-)
 
-# Dependency for FastAPI
+db = client[MONGODB_DB_NAME]
+
+
 def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+    return db
+
+
+def init_db():
+    users = db["users"]
+    users.create_index("email", unique=True)
+    users.create_index("username", unique=True)
+
+    scan_history = db["scan_history"]
+    scan_history.create_index([("user_id", 1), ("created_at", -1)])

@@ -30,15 +30,13 @@ from src.pipeline import run_pipeline
 import shutil
 import os
 from api.scan import router as scan_router
-from db.session import engine
-from db.base import Base
+from db.session import init_db
 from api.user import router as user_router
 from api.auth import router as auth_router
 from api.history import router as history_router
 
 
-Base.metadata.create_all(bind=engine)
-
+init_db()
 
 app = FastAPI(title="FoodShield API")
 
@@ -47,7 +45,7 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 app.include_router(auth_router, prefix="/api")
 app.include_router(scan_router, prefix="/api/scan")
-app.include_router(user_router)
+app.include_router(user_router, prefix="/api")
 app.include_router(history_router, prefix="/api")
 
 

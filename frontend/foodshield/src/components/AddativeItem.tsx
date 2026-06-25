@@ -9,9 +9,10 @@ interface AdditiveItemProps {
     info?: string;
   };
   index: number;
+  typeLabel?: string;
 }
 
-export default function AdditiveItem({ item, index }: AdditiveItemProps) {
+export default function AdditiveItem({ item, index, typeLabel = "Type" }: AdditiveItemProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -39,7 +40,7 @@ export default function AdditiveItem({ item, index }: AdditiveItemProps) {
       {expanded && (
         <View className="px-3 pb-3 border-t border-gray-100">
           <Text className="text-xs text-gray-500 mt-2">
-            <Text className="font-semibold text-gray-700">Type: </Text>
+            <Text className="font-semibold text-gray-700">{typeLabel}: </Text>
             {item.e_type}
           </Text>
           <Text className="text-xs text-gray-500 mt-1 leading-4">

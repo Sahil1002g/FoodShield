@@ -10,12 +10,17 @@ const getColor = (reco: string) => {
   }
 };
 
-const Recommendation = ({ product }: any) => {
+interface RecommendationProps {
+  product: any;
+  originalRecommendation?: string;
+}
+
+const Recommendation = ({ product, originalRecommendation }: RecommendationProps) => {
   return (
     <View className="h-10 bg-[#efe9e2] my-4 mx-3 rounded-xl flex justify-center " >
         <View className='flex flex-row justify-between px-6'>
             <Text style={{
-        backgroundColor: getColor(product.recommendation),
+        backgroundColor: getColor(originalRecommendation ?? product.recommendation),
       }} className="rounded-xl h-6 w-[170px] text-center">{product.recommendation}</Text>
         <Text className='pr-6'>
            100g

@@ -8,13 +8,22 @@ const { height, width } = Dimensions.get('window');
 
 const SplashScreen = ({ navigation }: any) => {
   useEffect(() => {
-    let timer: NodeJS.Timeout;
+    let timer: ReturnType<typeof setTimeout>;
 
     const checkAuth = async () => {
       try {
-        // await AsyncStorage.clear();
-        const token = await AsyncStorage.getItem('userToken');
-        const isLoggedIn = false;     // !!token
+        const token = await AsyncStorage.getItem('token');
+        const legacyToken = await AsyncStorage.getItem('userToken');
+        const storedToken = token || legacyToken;
+        const isLoggedIn = Boolean(storedToken);
+
+        if (storedToken && !token) {
+          await AsyncStorage.setItem('token', storedToken);
+        }
+
+        if (storedToken && !legacyToken) {
+          await AsyncStorage.setItem('userToken', storedToken);
+        }
 
         timer = setTimeout(() => {
           navigation.replace(

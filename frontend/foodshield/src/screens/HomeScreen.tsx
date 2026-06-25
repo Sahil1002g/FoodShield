@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import API from "../utils/api";
 
@@ -19,10 +19,13 @@ export default function HomeScreen() {
   const [username, setUsername] = useState("");
   const [recentHistory, setRecentHistory] = useState<any[]>([]);
 
-  useEffect(() => {
-    fetchUser();
-    fetchRecentHistory();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchUser();
+      fetchRecentHistory();
+      return undefined;
+    }, [])
+  );
 
   const fetchUser = async () => {
     try {

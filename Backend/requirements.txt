@@ -26,7 +26,7 @@ opencv-python-headless==4.13.0.90
 pillow==12.1.0
 pytesseract==0.3.13
 
-
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
 
 google-cloud-vision==3.12.0
 
